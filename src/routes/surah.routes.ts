@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import surahs from '../../data/surahs.json';
+import { readJsonFile } from '../utils/readJsonFile';
 
 const router = Router();
 
@@ -10,6 +11,29 @@ router.get('/', (_req, res) => {
     total: surahs.length,
     data: surahs,
   });
+});
+
+// specific verses
+router.get('/:id/verses', (req, res) => {
+  const id = Number(req.params.id);
+
+  try {
+    const arabicVerses = readJsonFile<any[]>(`data/chapters/ar/${id}.json`);
+    const englishVerses = readJsonFile<any[]>(`data/chapters/en/${id}.json`);
+
+    return res.json({
+      success: true,
+      data: {
+        arabic: arabicVerses,
+        english: englishVerses,
+      },
+    });
+  } catch (error) {
+    return res.status(404).json({
+      success: false,
+      message: 'Verses not found for this surah',
+    });
+  }
 });
 
 // specific surah
