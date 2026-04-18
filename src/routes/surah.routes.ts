@@ -18,8 +18,8 @@ router.get('/:id/verses', (req, res) => {
   const id = Number(req.params.id);
 
   try {
-    const arabicVerses = readJsonFile<any[]>(`data/chapters/ar/${id}.json`);
-    const englishVerses = readJsonFile<any[]>(`data/chapters/en/${id}.json`);
+    const arabicVerses = readJsonFile<any>(`data/chapters/ar/${id}.json`);
+    const englishVerses = readJsonFile<any>(`data/chapters/en/${id}.json`);
 
     return res.json({
       success: true,
@@ -29,9 +29,11 @@ router.get('/:id/verses', (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(404).json({
+    console.error('VERSES ROUTE ERROR:', error);
+
+    return res.status(500).json({
       success: false,
-      message: 'Verses not found for this surah',
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
