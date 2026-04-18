@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/**": {
+    "src/server.ts": {
       "includeFiles": "data/**"
     }
   }
